@@ -1,53 +1,55 @@
 <template>
-  <div class="max-w-sm mx-auto mt-20">
-    <h1 class="text-2xl font-bold mb-4">Welcome</h1>
+  <div>
+    <div class="max-w-sm mx-auto mt-20">
+      <h1 class="text-2xl font-bold mb-4">Welcome</h1>
 
-    <div
-      v-if="error"
-      class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4"
-    >
-      {{ error }}
-    </div>
-
-    <form class="space-y-3" @submit.prevent="onSubmit">
-      <input
-        v-model="email"
-        type="email"
-        placeholder="Email"
-        class="border p-2 w-full rounded"
-        required
-      />
-      <input
-        v-model="password"
-        type="password"
-        placeholder="Password"
-        class="border p-2 w-full rounded"
-        required
-      />
-      <input
-        v-if="isSignup"
-        v-model="fullName"
-        type="text"
-        placeholder="Full name"
-        class="border p-2 w-full rounded"
-        required
-      />
-
-      <button
-        class="bg-blue-600 text-white p-2 w-full rounded hover:bg-blue-700 disabled:opacity-50"
-        type="submit"
-        :disabled="loading"
+      <div
+        v-if="error"
+        class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4"
       >
-        {{ loading ? "Loading..." : isSignup ? "Sign Up" : "Sign In" }}
-      </button>
-    </form>
+        {{ error }}
+      </div>
 
-    <p class="mt-3 text-sm text-center">
-      {{ isSignup ? "Already have an account?" : "Need an account?" }}
-      <button class="text-blue-600 underline" @click="isSignup = !isSignup">
-        {{ isSignup ? "Sign In" : "Sign Up" }}
-      </button>
-    </p>
+      <form class="space-y-3" @submit.prevent="onSubmit">
+        <input
+          v-model="email"
+          type="email"
+          placeholder="Email"
+          class="border p-2 w-full rounded"
+          required
+        />
+        <input
+          v-model="password"
+          type="password"
+          placeholder="Password"
+          class="border p-2 w-full rounded"
+          required
+        />
+        <input
+          v-if="isSignup"
+          v-model="fullName"
+          type="text"
+          placeholder="Full name"
+          class="border p-2 w-full rounded"
+          required
+        />
+
+        <button
+          class="bg-blue-600 text-white p-2 w-full rounded hover:bg-blue-700 disabled:opacity-50"
+          type="submit"
+          :disabled="loading"
+        >
+          {{ loading ? "Loading..." : isSignup ? "Sign Up" : "Sign In" }}
+        </button>
+      </form>
+
+      <p class="mt-3 text-sm text-center">
+        {{ isSignup ? "Already have an account?" : "Need an account?" }}
+        <button class="text-blue-600 underline" @click="isSignup = !isSignup">
+          {{ isSignup ? "Sign In" : "Sign Up" }}
+        </button>
+      </p>
+    </div>
   </div>
 </template>
 
