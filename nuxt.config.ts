@@ -15,4 +15,10 @@ export default defineNuxtConfig({
     },
   },
   css: ["./app/assets/css/main.css"],
+  runtimeConfig: {
+    apiUrl: process.env.NUXT_API_URL || "http://localhost:3030",
+    public: {
+      apiUrl: process.env.NUXT_API_URL || "http://localhost:3030",
+    },
+  },
 });

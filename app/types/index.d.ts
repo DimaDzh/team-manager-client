@@ -2,6 +2,7 @@ import type { AvatarProps } from "@nuxt/ui";
 
 export type UserStatus = "subscribed" | "unsubscribed" | "bounced";
 export type SaleStatus = "paid" | "failed" | "refunded";
+export type UserRole = "ADMIN" | "COACH" | "PLAYER";
 
 export interface User {
   id: number;
@@ -10,6 +11,22 @@ export interface User {
   avatar?: AvatarProps;
   status: UserStatus;
   location: string;
+}
+
+export interface AuthUser {
+  id: string;
+  email: string;
+  fullName: string;
+  role: UserRole;
+}
+
+declare module "#auth-utils" {
+  interface User extends AuthUser {}
+
+  interface UserSession {
+    user: AuthUser;
+    token: string;
+  }
 }
 
 export interface Mail {

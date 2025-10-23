@@ -1,76 +1,82 @@
-<script setup lang="ts">
-import { sub } from "date-fns";
-import type { DropdownMenuItem } from "@nuxt/ui";
-import type { Period, Range } from "~/types";
-import { useDashboard } from "~/composables/useDashboard";
-import { ref, shallowRef } from "vue";
-
-const { isNotificationsSlideoverOpen } = useDashboard();
-
-const items = [
-  [
-    {
-      label: "New mail",
-      icon: "i-lucide-send",
-      to: "/inbox",
-    },
-    {
-      label: "New customer",
-      icon: "i-lucide-user-plus",
-      to: "/customers",
-    },
-  ],
-] satisfies DropdownMenuItem[][];
-
-const range = shallowRef<Range>({
-  start: sub(new Date(), { days: 14 }),
-  end: new Date(),
-});
-const period = ref<Period>("daily");
-</script>
-
 <template>
-  <UDashboardPanel id="home">
-    <template #header>
-      <UDashboardNavbar title="Home" :ui="{ right: 'gap-3' }">
-        <template #leading>
-          <UDashboardSidebarCollapse />
-        </template>
+  <div class="max-w-sm mx-auto mt-20">
+    <h1 class="text-2xl font-bold mb-4">Welcome</h1>
 
-        <template #right>
-          <UTooltip text="Notifications" :shortcuts="['N']">
-            <UButton
-              color="neutral"
-              variant="ghost"
-              square
-              @click="isNotificationsSlideoverOpen = true"
-            >
-              <UChip color="error" inset>
-                <UIcon name="i-lucide-bell" class="size-5 shrink-0" />
-              </UChip>
-            </UButton>
-          </UTooltip>
+    <div
+      v-if="error"
+      class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4"
+    >
+      {{ error }}
+    </div>
 
-          <UDropdownMenu :items="items">
-            <UButton icon="i-lucide-plus" size="md" class="rounded-full" />
-          </UDropdownMenu>
-        </template>
-      </UDashboardNavbar>
+    <form class="space-y-3" @submit.prevent="onSubmit">
+      <input
+        v-model="email"
+        type="email"
+        placeholder="Email"
+        class="border p-2 w-full rounded"
+        required
+      />
+      <input
+        v-model="password"
+        type="password"
+        placeholder="Password"
+        class="border p-2 w-full rounded"
+        required
+      />
+      <input
+        v-if="isSignup"
+        v-model="fullName"
+        type="text"
+        placeholder="Full name"
+        class="border p-2 w-full rounded"
+        required
+      />
 
-      <UDashboardToolbar>
-        <template #left>
-          <!-- NOTE: The `-ms-1` class is used to align with the `DashboardSidebarCollapse` button here. -->
-          <HomeDateRangePicker v-model="range" class="-ms-1" />
+      <button
+        class="bg-blue-600 text-white p-2 w-full rounded hover:bg-blue-700 disabled:opacity-50"
+        type="submit"
+        :disabled="loading"
+      >
+        {{ loading ? "Loading..." : isSignup ? "Sign Up" : "Sign In" }}
+      </button>
+    </form>
 
-          <HomePeriodSelect v-model="period" :range="range" />
-        </template>
-      </UDashboardToolbar>
-    </template>
-
-    <template #body>
-      <HomeStats :period="period" :range="range" />
-      <HomeChart :period="period" :range="range" />
-      <HomeSales :period="period" :range="range" />
-    </template>
-  </UDashboardPanel>
+    <p class="mt-3 text-sm text-center">
+      {{ isSignup ? "Already have an account?" : "Need an account?" }}
+      <button class="text-blue-600 underline" @click="isSignup = !isSignup">
+        {{ isSignup ? "Sign In" : "Sign Up" }}
+      </button>
+    </p>
+  </div>
 </template>
+
+<script setup>
+const { login, register } = useAuth();
+
+const email = ref("");
+const password = ref("");
+const fullName = ref("");
+const isSignup = ref(false);
+const loading = ref(false);
+const error = ref("");
+
+const onSubmit = async () => {
+  if (loading.value) return;
+
+  loading.value = true;
+  error.value = "";
+
+  try {
+    if (isSignup.value) {
+      await register(email.value, password.value, fullName.value);
+    } else {
+      await login(email.value, password.value);
+    }
+  } catch (err) {
+    error.value = err.message || "Authentication failed";
+  } finally {
+    loading.value = false;
+  }
+};
+</script>

@@ -5285,7 +5285,7 @@ nth-check@^2.0.1, nth-check@^2.1.1:
   dependencies:
     boolbase "^1.0.0"
 
-nuxt-auth-utils@0.5.25:
+nuxt-auth-utils@^0.5.25:
   version "0.5.25"
   resolved "https://registry.yarnpkg.com/nuxt-auth-utils/-/nuxt-auth-utils-0.5.25.tgz#866fa2bfc54af0627fa8c1548d296af92bcb6e42"
   integrity sha512-tL9Y0duW3a133BZxy5917KvZ9iLX900PW47Qr80IPytwFspEzyqD7c1/zWACUVPv7QPTTD3LxT7LOtK4aJnfEw==
