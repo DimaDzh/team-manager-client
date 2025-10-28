@@ -9,10 +9,17 @@ export default defineNuxtConfig({
     "@nuxt/ui",
     "@vueuse/nuxt",
   ],
+
+  imports: {
+    autoImport: true,
+  },
   routeRules: {
     "/api/**": {
       cors: true,
     },
+  },
+  colorMode: {
+    preference: "light",
   },
   css: ["./app/assets/css/main.css"],
   runtimeConfig: {

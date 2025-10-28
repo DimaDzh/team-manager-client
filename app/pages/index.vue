@@ -1,84 +1,62 @@
 <template>
   <div>
-    <div class="max-w-sm mx-auto mt-20">
-      <h1 class="text-2xl font-bold mb-4">Welcome</h1>
+    <div class="max-w-lg mx-auto mt-20">
+      <h1 class="text-2xl font-bold mb-4 text-center">Welcome</h1>
 
-      <div
-        v-if="error"
-        class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4"
-      >
-        {{ error }}
+      <!-- Toggle between Login and Create Account -->
+      <div class="flex justify-center mb-6">
+        <div class="bg-gray-200 p-1 rounded-lg">
+          <button
+            :class="[
+              'px-4 py-2 rounded-md font-medium transition-colors duration-200',
+              !isSignup
+                ? 'bg-white text-gray-900 shadow-sm'
+                : 'text-gray-600 hover:text-gray-900',
+            ]"
+            @click="isSignup = false"
+          >
+            Login
+          </button>
+          <button
+            :class="[
+              'px-4 py-2 rounded-md font-medium transition-colors duration-200',
+              isSignup
+                ? 'bg-white text-gray-900 shadow-sm'
+                : 'text-gray-600 hover:text-gray-900',
+            ]"
+            @click="isSignup = true"
+          >
+            Create Account
+          </button>
+        </div>
       </div>
 
-      <form class="space-y-3" @submit.prevent="onSubmit">
-        <input
-          v-model="email"
-          type="email"
-          placeholder="Email"
-          class="border p-2 w-full rounded"
-          required
-        />
-        <input
-          v-model="password"
-          type="password"
-          placeholder="Password"
-          class="border p-2 w-full rounded"
-          required
-        />
-        <input
-          v-if="isSignup"
-          v-model="fullName"
-          type="text"
-          placeholder="Full name"
-          class="border p-2 w-full rounded"
-          required
-        />
+      <!-- Form Components -->
+      <div class="transition-all duration-300">
+        <CustomLoginForm v-if="!isSignup" />
+        <CustomCreateUserForm v-else />
+      </div>
 
-        <button
-          class="bg-blue-600 text-white p-2 w-full rounded hover:bg-blue-700 disabled:opacity-50"
-          type="submit"
-          :disabled="loading"
-        >
-          {{ loading ? "Loading..." : isSignup ? "Sign Up" : "Sign In" }}
-        </button>
-      </form>
-
-      <p class="mt-3 text-sm text-center">
-        {{ isSignup ? "Already have an account?" : "Need an account?" }}
-        <button class="text-blue-600 underline" @click="isSignup = !isSignup">
-          {{ isSignup ? "Sign In" : "Sign Up" }}
-        </button>
-      </p>
+      <!-- Toggle Link -->
+      <div class="text-center mt-6">
+        <p class="text-sm text-gray-600">
+          {{ isSignup ? "Already have an account?" : "Don't have an account?" }}
+          <button
+            class="text-blue-600 hover:text-blue-800 font-medium underline ml-1"
+            @click="toggleForm"
+          >
+            {{ isSignup ? "Login here" : "Create one here" }}
+          </button>
+        </p>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-const { login, register } = useAuth();
-
-const email = ref("");
-const password = ref("");
-const fullName = ref("");
 const isSignup = ref(false);
-const loading = ref(false);
-const error = ref("");
 
-const onSubmit = async () => {
-  if (loading.value) return;
-
-  loading.value = true;
-  error.value = "";
-
-  try {
-    if (isSignup.value) {
-      await register(email.value, password.value, fullName.value);
-    } else {
-      await login(email.value, password.value);
-    }
-  } catch (err) {
-    error.value = err.message || "Authentication failed";
-  } finally {
-    loading.value = false;
-  }
+const toggleForm = () => {
+  isSignup.value = !isSignup.value;
 };
 </script>
